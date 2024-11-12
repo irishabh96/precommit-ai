@@ -1,0 +1,32 @@
+[package]
+name = "precommit-ai"
+version = "0.3.1"
+authors = ["Rishabh Bhatia <irishabh96@gmail.com>"]
+license = "MIT"
+description = "A CLI precommit hook for all git commit messages & changes"
+readme = "README.md"
+categories = ["command-line-utilities"]
+edition = "2021"
+include = [
+    "**/*.rs",
+    "Cargo.toml",
+    "README.md"
+]
+
+[dependencies]
+tokio = { version = "1.26.0", features = ["full"] }
+log = "0.4.17"
+serde_json = "1.0.94"
+serde_derive = "1.0.155"
+serde = { version = "1.0", features = ["derive"] }
+surf = "2.3.2"
+thiserror = "1.0.39"
+ansi_term = "0.12.1"
+dialoguer = "0.10.3"
+spinners-rs = "2.3.0"
+openssl = { version = "0.10", features = ["vendored"] }
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+[[bin]]
+name = "precommit-ai"
+path = "src/main.rs"
