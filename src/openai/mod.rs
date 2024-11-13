@@ -208,19 +208,12 @@ pub struct ResponseMessage {
 }
 #[derive(Deserialize, Debug, Clone)]
 pub struct CompletionResponse {
-    pub id: String,
-    pub object: String,
-    pub created: u64,
-    pub model: String,
+
     pub choices: Vec<Choice>,
-    pub text: Option<String>,
 }
 #[derive(Deserialize, Debug, Clone)]
 pub struct Choice {
     pub message: ResponseMessage,
-    pub text: Option<String>,
-    pub index: u64,
-    pub finish_reason: String,
 }
 
 fn sanitize_message(message: &str) -> String {
@@ -230,16 +223,16 @@ fn sanitize_message(message: &str) -> String {
         // .replace(r"\w\.$", "$1")
 }
 
-pub struct GitCommitMessageGenerator {
+pub struct GitCodeReviewGenerator {
     openai_client: OpenAiClient,
 }
 
-impl GitCommitMessageGenerator {
+impl GitCodeReviewGenerator {
     pub fn new(openai_client: OpenAiClient) -> Self {
         Self { openai_client }
     }
 
-    pub async fn generate_commit_message(&self, diff: &str) -> Result<String, Box<dyn Error>> {
+    pub async fn generate_code_review(&self, diff: &str) -> Result<String, Box<dyn Error>> {
         let prompt: &str = &format!("**User Input**: ''' {} {}", diff, "'''");
 
         if prompt.len() > 40000 {

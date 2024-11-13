@@ -11,7 +11,7 @@ use spinners_rs::{Spinner, Spinners};
 use crate::{
     config::Config,
     git::{get_staged_files, StagedFiles},
-    openai::{GitCommitMessageGenerator, OpenAiClient},
+    openai::{GitCodeReviewGenerator, OpenAiClient},
 };
 
 mod config;
@@ -47,13 +47,13 @@ impl<T> PostfixHandleError<T> for Result<T, Box<dyn Error>> {
 }
 
 struct AICommits {
-    git_commit_message_generator: GitCommitMessageGenerator,
+    git_review_generator: GitCodeReviewGenerator,
     staged_files: StagedFiles,
 }
 
 impl AICommits {
     fn new(client: OpenAiClient) -> Result<Self, Box<dyn Error>> {
-        let git_commit_message_generator = GitCommitMessageGenerator::new(client);
+        let git_review_generator = GitCodeReviewGenerator::new(client);
         let staged_files = get_staged_files()?;
         println!(
             "{}",
@@ -64,7 +64,7 @@ impl AICommits {
             Green.bold().paint(join_vec_indented(&staged_files.files))
         );
         Ok(Self {
-            git_commit_message_generator,
+            git_review_generator,
             staged_files,
         })
     }
@@ -120,8 +120,8 @@ async fn main() -> Result<(), Box<dyn Error>> {
     let mut spinner = Spinner::new(Spinners::Aesthetic, "The AI is analyzing your changes...");
     spinner.start();
     let commit_message = (ai_commits
-        .git_commit_message_generator
-        .generate_commit_message(&ai_commits.staged_files.diff)
+        .git_review_generator
+        .generate_code_review(&ai_commits.staged_files.diff)
         .await)
         .handle_error();
     spinner.stop_with_message("\n✓ Changes analyzed\n\n");
