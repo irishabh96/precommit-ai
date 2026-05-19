@@ -112,6 +112,7 @@ fn join_vec_indented<S: ToString>(v: &[S]) -> String {
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn Error>> {
+    env_logger::init();
     println!("{}", Black.on(Cyan).paint("precommit-ai"));
     let config = Config::new()?;
     let base_url = "https://api.openai.com/v1/".to_string();
