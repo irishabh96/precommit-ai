@@ -246,6 +246,8 @@ impl GitCommitMessageGenerator {
             return Err(AppError::DiffTooLarge.into());
         }
 
+        println!("\n----- SYSTEM PROMPT -----\n{}\n----- USER PROMPT -----\n{}\n-------------------------\n", PROMPT, prompt);
+
         let completion: CompletionResponse = self.openai_client.create_chat_completion(prompt).await?;
 
 
